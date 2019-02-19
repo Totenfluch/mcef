@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * An example mod that shows you how to use MCEF.
  * Assuming that it is client-side only and that onInit() is called on initialization.
- * This example shows a simple 2D web browser when pressing F6.
+ * This example shows a simple 2D web browser when pressing F10.
  * 
  * @author montoyo
  *
@@ -45,7 +45,10 @@ public class ExampleMod implements IDisplayHandler, IJSQueryHandler {
         if(api == null)
             return;
 
-        api.registerScheme("mod", ModScheme.class, true, false, false);
+        api.registerSchemeEx("mod", ModScheme.class,
+                true, false, false,
+                true, true, false
+                );
     }
     
     public void onInit() {

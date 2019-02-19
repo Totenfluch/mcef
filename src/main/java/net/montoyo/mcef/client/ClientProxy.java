@@ -167,9 +167,11 @@ public class ClientProxy extends BaseProxy {
                 libs.add(System.getProperty("sun.arch.data.model").equals("64") ? "d3dcompiler_47.dll" : "d3dcompiler_43.dll");
                 libs.add("libGLESv2.dll");
                 libs.add("libEGL.dll");
+                libs.add("chrome_elf.dll");
                 libs.add("libcef.dll");
                 libs.add("jcef.dll");
             } else {
+                libs.add("chrome_elf.so");
                 libs.add("libcef.so");
                 libs.add("libjcef.so");
             }
@@ -254,7 +256,13 @@ public class ClientProxy extends BaseProxy {
 
     @Override
     public void registerScheme(String name, Class<? extends IScheme> schemeClass, boolean std, boolean local, boolean displayIsolated) {
-        appHandler.registerScheme(name, schemeClass, std, local, displayIsolated);
+        registerSchemeEx(name, schemeClass, std, local, displayIsolated, true, true, false);
+    }
+
+    @Override
+    public void registerSchemeEx(String name, Class<? extends IScheme> schemeClass, boolean std, boolean local, boolean displayIsolated,
+                               boolean isSecure, boolean isCorsEnabled, boolean isCspBypassing) {
+        appHandler.registerScheme(name, schemeClass, std, local, displayIsolated, isSecure, isCorsEnabled, isCspBypassing);
     }
 
     @Override
@@ -320,6 +328,8 @@ public class ClientProxy extends BaseProxy {
             Thread.sleep(100);
         } catch(Throwable t) {}
 
+        // DOM: TODO: MCEF: we may need to call this from the other thread, getting this failed check and crash:
+        // [0617/001244.151:FATAL:context.cpp(129)] Check failed: thread_checker_.CalledOnValidThread()
         cefApp.N_Shutdown();
     }
 
